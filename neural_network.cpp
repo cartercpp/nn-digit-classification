@@ -136,3 +136,31 @@ void neural_network::fit(const math_vector<double>& input, const math_vector<dou
         }
     }
 }
+
+neural_network::neural_network(const std::vector<matrix<double>>& weights,
+                                const std::vector<math_vector<double>>& biases,
+                                const std::vector<std::size_t>& neuronsPerLayer,
+                                double learningRate)
+                                    : m_weights{weights}, m_biases{biases}, m_neuronsPerLayer{neuronsPerLayer},
+                                    m_learningRate{learningRate}
+{}
+
+const std::vector<matrix<double>>& neural_network::get_weights() const
+{
+    return m_weights;
+}
+
+const std::vector<math_vector<double>>& neural_network::get_biases() const
+{
+    return m_biases;
+}
+
+const std::vector<std::size_t>& neural_network::get_neurons_per_layer() const
+{
+    return m_neuronsPerLayer;
+}
+
+double neural_network::get_learning_rate() const
+{
+    return m_learningRate;
+}

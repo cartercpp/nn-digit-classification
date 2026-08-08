@@ -7,18 +7,17 @@
 #include <thread>
 #include <stop_token>
 #include <chrono>
-#include <cstddef>
 #include "math_vector.h"
 #include "neural_network.h"
 
 extern const std::array<std::string, 10> digits;
+extern neural_network digitNN;
 
 int main()
 {
     std::random_device rd;
     std::uniform_int_distribution<int> dist(0, 9);
 
-    neural_network digitNN({784, 512, 256, 10}, 0.01);
     math_vector<double> vec(784);
 
     auto moveCursor = [](int row, int column)
@@ -29,25 +28,6 @@ int main()
     std::print("\033[?25l"); // cursor off
     std::print("\033[2J"); // clear screen
     moveCursor(0, 0);
-    std::println("Training progress: 0%");
-
-    constexpr int trainingEpochs = 100'000;
-    for (int epoch = 1; epoch <= trainingEpochs; ++epoch)
-    {
-        const int digit = dist(rd);
-        for (int index = 0; index < 784; ++index)
-            vec[index] = (digits[digit][index] != ' ');
-
-        math_vector<double> target(10, 0);
-        target[digit] = 1;
-        digitNN.fit(vec, target);
-
-        if (epoch % (trainingEpochs / 10) == 0)
-            std::println("Training progress: {}%", epoch * 100 / trainingEpochs);
-    }
-
-    std::cin.get();
-    std::print("\033[2J"); // clear screen
 
     std::jthread thr{[&](std::stop_token st)
     {
@@ -74,9 +54,11 @@ int main()
                     predictedDigit = i;
 
             std::print("Prediction: {} ({:.2f}% confidence)", predictedDigit, classification[predictedDigit] * 100);
+            std::cout << std::flush;
 
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
     }};
     std::cin.get();
+    std::print("\033[?25h"); // restore cursor
 }

@@ -18,11 +18,18 @@ public:
     // CONSTRUCTORS
 
     explicit neural_network(std::initializer_list<std::size_t>, double);
+    explicit neural_network(const std::vector<matrix<double>>&, const std::vector<math_vector<double>>&,
+                            const std::vector<std::size_t>&, double);
 
     // METHODS
 
     math_vector<double> predict(const math_vector<double>&) const;
     void fit(const math_vector<double>&, const math_vector<double>&);
+
+    const std::vector<matrix<double>>& get_weights() const;
+    const std::vector<math_vector<double>>& get_biases() const;
+    const std::vector<std::size_t>& get_neurons_per_layer() const;
+    double get_learning_rate() const;
 
 private:
 

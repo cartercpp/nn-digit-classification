@@ -8,4 +8,5 @@ add_executable(DigitClassification main.cpp
         matrix.h
         neural_network.h
         neural_network.cpp
-        digits.cpp)
+        digits.cpp
+        digitNN.cpp)
